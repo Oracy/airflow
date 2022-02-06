@@ -1,5 +1,11 @@
 # Airflow Docker
 
+Clone this repository, and after that pull submodules with:
+
+```bash
+git submodule init && git submodule update
+```
+
 To initiate airflow db, run command:
 
 ```bash
