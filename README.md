@@ -21,3 +21,10 @@ to stop airflow
 ```bash
 docker-compose down
 ```
+
+To login, access http://localhost:8080 with:
+
+```
+user: airflow
+password: airflow
+```
