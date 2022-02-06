@@ -1,0 +1,3 @@
+[submodule "dag_examples"]
+	path = dags/airflow-dags
+	url = git@github.com:Oracy/airflow-dags.git
