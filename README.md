@@ -28,3 +28,10 @@ To login, access http://localhost:8080 with:
 user: airflow
 password: airflow
 ```
+
+To access database and create your source to use on flows localhost:5432
+
+```
+user: airflow
+password: airflow
+```
