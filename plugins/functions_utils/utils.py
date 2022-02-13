@@ -58,7 +58,7 @@ def alert_slack_channel(context: Dict) -> None:
     }
     title = (
         f':red_circle: AIRFLOW DAG *{message_variables["dag_id"]}*'
-        ' - TASK *{message_variables["task_id"]}* has failed! :boom:'
+        f' - TASK *{message_variables["task_id"]}* has failed! :boom:'
     )
     msg_parts = {
         "Execution date": message_variables["execution_date"],
