@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import Dict
+from typing import Any, Dict
 
 import pandas as pd
 from airflow.models import XCom
@@ -29,7 +29,7 @@ def cleanup_xcom(context: Dict, session=None) -> None:
     ).delete()
 
 
-def alert_slack_channel(context: Dict) -> None:
+def alert_slack_channel(context: Dict[str, Any]) -> None:
     """Send message to slack if task fail, using function on_failure_callback.
 
     Args:
@@ -48,7 +48,7 @@ def alert_slack_channel(context: Dict) -> None:
         There is no return
     """
     last_task = context.get("task_instance")
-    message_variables = {
+    message_variables: Dict[str, Any] = {
         "dag_id": last_task.dag_id,
         "task_id": last_task.task_id,
         "execution_date": context.get("execution_date"),
@@ -56,23 +56,23 @@ def alert_slack_channel(context: Dict) -> None:
         "log_url": last_task.log_url,
         "duration": last_task.duration,
     }
-    title = (
+    title: str = (
         f':red_circle: AIRFLOW DAG *{message_variables["dag_id"]}*'
         f' - TASK *{message_variables["task_id"]}* has failed! :boom:'
     )
-    msg_parts = {
+    msg_parts: Dict[str, str] = {
         "Execution date": message_variables["execution_date"],
         "Error": message_variables["error_message"],
         "Log url": message_variables["log_url"],
         "Task Duration": message_variables["duration"],
     }
-    msg = "\n".join([title, *[f"*{k}*: {v}" for k, v in msg_parts.items()]]).strip()
+    msg: str = "\n".join([title, *[f"*{k}*: {v}" for k, v in msg_parts.items()]]).strip()
     SlackWebhookOperator(
         task_id="notify_slack_channel_alert", http_conn_id="slack_webhook", message=msg
     ).execute(context=None)
 
 
-def read_parquet(**kwargs) -> pd.DataFrame:
+def read_parquet(**kwargs: Dict[str, Any]) -> pd.DataFrame:
     """Read data from parquet to call function to insert data into postgres database.
 
     Args:
@@ -82,8 +82,8 @@ def read_parquet(**kwargs) -> pd.DataFrame:
         Only a f-string with which table were inserted. For example:
         acute_g_day_bw_all_days Done!
     """
-    relative_path = kwargs.get("relative_path")
-    home_path = os.environ["HOME"]
-    file_path = os.path.join(home_path, "dags", relative_path)
-    df = pd.read_parquet(file_path)
+    relative_path: str = kwargs.get("relative_path")
+    home_path: str = os.environ["HOME"]
+    file_path: str = os.path.join(home_path, "dags", relative_path)
+    df: pd.DataFrame = pd.read_parquet(file_path)
     return df
